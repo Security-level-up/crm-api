@@ -1,0 +1,20 @@
+
+{
+    "region" : "eu-west-1",
+    "configuration" : "Release",
+    "framework"     : "net8.0",
+    "function-name" : "CRMApi",
+    "package-type"  : "Zip",
+    "function-handler" : "api",
+    "function-memory-size" : 256,
+    "function-role"        : "arn:aws:iam::680901290385:role/lambda_exec_CRMApi",
+    "function-timeout"     : 10,
+    "function-runtime"     : "dotnet8",
+    "function-architecture" : "x86_64",
+    "function-subnets"      : "",
+    "function-security-groups" : "",
+    "tracing-mode"             : "PassThrough",
+    "environment-variables"    : "",
+    "dockerfile"               : "Dockerfile",
+    "image-tag"                : ""
+}
