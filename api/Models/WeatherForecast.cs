@@ -1,4 +1,4 @@
-namespace api
+namespace Models
 {
     public class WeatherForecast
     {
