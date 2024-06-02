@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,6 @@ string validAudience = cognitoAppClientId;
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
 
 builder.Services.AddCors(item =>
@@ -68,6 +69,20 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+ var host = Environment.GetEnvironmentVariable("CRM_DB_HOST");
+    var port = Environment.GetEnvironmentVariable("CRM_DB_PORT");
+    var database = Environment.GetEnvironmentVariable("CRM_DB_DATABASE");
+    var username = Environment.GetEnvironmentVariable("CRM_DB_USERNAME");
+    var password = Environment.GetEnvironmentVariable("CRM_DB_PASSWORD");
+
+    var connectionString = $"Host={host};Port={port};Database={database};Username={username};Password={password}";
+
+
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseNpgsql(connectionString));
+
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -77,14 +92,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("CORSPolicy");
-
 app.UseHttpsRedirection();
-
+app.UseCors("CORSPolicy");
 app.UseAuthentication();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
