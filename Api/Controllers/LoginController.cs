@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Models;
 using Data;
 using System.Security.Claims;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
