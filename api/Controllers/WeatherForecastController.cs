@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
-namespace api.Controllers
+namespace Api.Controllers
 {
     [Authorize]
     [ApiController]
