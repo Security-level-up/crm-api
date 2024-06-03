@@ -56,6 +56,12 @@ builder.Services
         };
     });
 
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy(UserRoles.Manager, policy => policy.RequireRole(UserRoles.Manager))
+    .AddPolicy(UserRoles.SalesRep, policy => policy.RequireRole(UserRoles.SalesRep))
+    .AddPolicy(UserRoles.GeneralUser, policy => policy.RequireRole(UserRoles.GeneralUser));
+
+
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "CRM Tool", Version = "v1" });

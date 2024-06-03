@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Data;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Controllers
@@ -18,6 +19,7 @@ namespace Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = UserRoles.Manager)]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
