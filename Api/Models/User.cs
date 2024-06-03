@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Models
 {
+    [Table("User")]
     public class User
     {
         [SwaggerSchema(ReadOnly = true)]

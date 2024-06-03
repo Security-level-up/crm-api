@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Models;
-using Data;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Api.Interfaces;
 
 namespace Controllers
 {
@@ -11,40 +10,29 @@ namespace Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public LoginController(ApplicationDbContext context)
+        public LoginController(IUserRepository userRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
         }
 
         [HttpGet]
         [ProducesResponseType(200)]
         public IActionResult Login()
         {
+            IActionResult response = Unauthorized("Missing or invalid token");
+
             var claimsIdentity = User.Identity as ClaimsIdentity;
             Claim? email = claimsIdentity?.FindFirst(ClaimTypes.Email);
 
             if (email == null)
             {
-                return BadRequest("Email not found in claims");
+                return response;
             }
 
-            User? userObj = null;
-            bool userExists = _context.Users.Any(user => user.Username == email.Value);
-
-            if (!userExists)
-            {
-                _context.Users.Add(new User
-                {
-                    Username = email.Value,
-                    RoleID = 1
-                });
-                _context.SaveChanges();
-            }
-
-            userObj = _context.Users.FirstOrDefault(user => user.Username == email.Value);
-            return Ok(userObj);
+            var user = _userRepository.AddOrGetUser(email.Value);
+            return Ok(user);
         }
     }
 }

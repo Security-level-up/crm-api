@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Models;
-using Data;
+using Api.Interfaces;
 
 
 namespace Controllers
@@ -10,18 +9,17 @@ namespace Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRolesRepository _rolesRepository;
 
-        public RolesController(ApplicationDbContext context)
+        public RolesController(IRolesRepository rolesRepository)
         {
-            _context = context;
+            _rolesRepository = rolesRepository;
         }
 
-        // GET: api/Roles
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Role>>> GetRoles()
+        public ActionResult<IEnumerable<Role>> GetRoles()
         {
-            return await _context.Roles.ToListAsync();
+            return Ok(_rolesRepository.GetRoles());
         }
     }
 }

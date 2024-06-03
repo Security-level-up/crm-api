@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Models;
-using Data;
+using Api.Interfaces;
 
 
 namespace Controllers
@@ -10,18 +9,17 @@ namespace Controllers
     [ApiController]
     public class PipelineStagesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IPipelineRepository _pipelineRepository;
 
-        public PipelineStagesController(ApplicationDbContext context)
+        public PipelineStagesController(IPipelineRepository pipelineRepository)
         {
-            _context = context;
+            _pipelineRepository = pipelineRepository;
         }
 
-        // GET: api/PipelineStages
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PipelineStage>>> GetPipelineStages()
+        public ActionResult<IEnumerable<PipelineStage>> GetPipelineStages()
         {
-            return await _context.PipelineStages.ToListAsync();
+            return Ok(_pipelineRepository.GetPipelineStages());
         }
     }
 }
