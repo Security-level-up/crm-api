@@ -3,8 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Data;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 string[] allowedDomains = builder.Configuration["AppSettings:AllowedOrigions"].Split(",");
 string cognitoAppClientId = builder.Configuration["AppSettings:Cognito:AppClientId"].ToString();
@@ -14,7 +17,7 @@ string cognitoAWSRegion = builder.Configuration["AppSettings:Cognito:AWSRegion"]
 string validIssuer = $"https://cognito-idp.{cognitoAWSRegion}.amazonaws.com/{cognitoUserPoolId}";
 string validAudience = cognitoAppClientId;
 
-builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
 
@@ -82,7 +85,11 @@ builder.Services.AddSwaggerGen(option =>
         options.UseNpgsql(connectionString));
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.MaxDepth = 64; 
+    });;
 
 var app = builder.Build();
 
