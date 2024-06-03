@@ -7,7 +7,11 @@ using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddControllers()
+        .AddNewtonsoftJson(options =>
+        {
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        });
 
 string[] allowedDomains = builder.Configuration["AppSettings:AllowedOrigions"].Split(",");
 string cognitoAppClientId = builder.Configuration["AppSettings:Cognito:AppClientId"].ToString();

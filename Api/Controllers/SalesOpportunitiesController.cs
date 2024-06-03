@@ -66,12 +66,21 @@ namespace Controllers
 
         // GET: api/SalesOpportunities/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<SalesOpportunity>> GetSalesOpportunityById(int id)
+        public async Task<ActionResult<object>> GetSalesOpportunityById(int id)
         {
             var salesOpportunity = await _context.SalesOpportunities
-                .Include(so => so.AssignedUser)
-                .Include(so => so.PipelineStage)
-                .FirstOrDefaultAsync(so => so.OpportunityID == id);
+                .Where(so => so.OpportunityID == id)
+                .Select(so => new
+                {
+                    so.OpportunityID,
+                    so.Title,
+                    PipelineStage = new
+                    {
+                        so.PipelineStage.StageID,
+                        so.PipelineStage.StageName
+                    }
+                })
+                .FirstOrDefaultAsync();
 
             if (salesOpportunity == null)
             {
