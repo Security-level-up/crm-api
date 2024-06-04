@@ -17,6 +17,12 @@ namespace Models
         public DateTime? DateClosed { get; set; }
         public int Stage { get; set; }
         public int AssignedTo { get; set; }
+
+        [ForeignKey("AssignedTo")]
+        public User User { get; set; } = null!;
+
+        [ForeignKey("Stage")]
+        public PipelineStage PipelineStage { get; set; } = null!;
         public required string Notes { get; set; }
     }
 }

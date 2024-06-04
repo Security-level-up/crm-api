@@ -1,5 +1,6 @@
 using Api.Interfaces;
 using Data;
+using Microsoft.EntityFrameworkCore;
 using Models;
 
 namespace Api.Repository
@@ -15,7 +16,10 @@ namespace Api.Repository
 
         public ICollection<SalesOpportunity> GetSalesOpportunities()
         {
-            return [.. _context.SalesOpportunities.OrderBy(opportunity => opportunity.Title)];
+            return [.. _context.SalesOpportunities
+                .Include(u => u.User)
+                .Include(p => p.PipelineStage)
+                .OrderBy(opportunity => opportunity.Title)];
         }
     }
 }
