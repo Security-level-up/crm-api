@@ -1,10 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Models
 {
+    [Table("SalesOpportunity")]
     public class SalesOpportunity
     {
         [SwaggerSchema(ReadOnly = true)]
+        [Key]
         public int OpportunityID { get; set; }
         public required string Title { get; set; }
         public float ProbOfCompletion { get; set; }
@@ -13,8 +17,12 @@ namespace Models
         public DateTime? DateClosed { get; set; }
         public int Stage { get; set; }
         public int AssignedTo { get; set; }
+
+        [ForeignKey("AssignedTo")]
+        public User User { get; set; } = null!;
+
+        [ForeignKey("Stage")]
+        public PipelineStage PipelineStage { get; set; } = null!;
         public required string Notes { get; set; }
-        public required User AssignedUser { get; set; }
-        public required PipelineStage PipelineStage { get; set; }
     }
 }

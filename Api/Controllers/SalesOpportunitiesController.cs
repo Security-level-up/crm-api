@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Models;
-using Data;
+using Api.Interfaces;
 
 
 namespace Controllers
@@ -10,18 +9,17 @@ namespace Controllers
     [ApiController]
     public class SalesOpportunitiesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ISalesOpportunitiesRepository _salesOpportunitiesRepository;
 
-        public SalesOpportunitiesController(ApplicationDbContext context)
+        public SalesOpportunitiesController(ISalesOpportunitiesRepository salesOpportunitiesRepository)
         {
-            _context = context;
+            _salesOpportunitiesRepository = salesOpportunitiesRepository;
         }
 
-        // GET: api/SalesOpportunities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SalesOpportunity>>> GetSalesOpportunities()
+        public ActionResult<IEnumerable<SalesOpportunity>> GetSalesOpportunities()
         {
-            return await _context.SalesOpportunities.ToListAsync();
+            return Ok(_salesOpportunitiesRepository.GetSalesOpportunities());
         }
     }
 }

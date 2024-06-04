@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Data;
+using Api.Interfaces;
+using Api.Repository;
+using Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +32,11 @@ string connectionString = $"Host={host};Port={port};Database={database};Username
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString)
 );
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPipelineRepository, PipelineStageRepository>();
+builder.Services.AddScoped<IRolesRepository, RolesRepository>();
+builder.Services.AddScoped<ISalesOpportunitiesRepository, SalesOpportunitiesRepository>();
 
 builder.Services.AddControllers();
 
@@ -88,6 +96,8 @@ builder.Services.AddSwaggerGen(option =>
             Array.Empty<string>()
         }
     });
+
+    option.EnableAnnotations();
 });
 
 var app = builder.Build();

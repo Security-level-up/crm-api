@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Models;
-using Data;
-using Microsoft.AspNetCore.Authorization;
+using Api.Interfaces;
 
 
 namespace Controllers
@@ -11,18 +9,23 @@ namespace Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public UsersController(ApplicationDbContext context)
+        public UsersController(IUserRepository userRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
         }
 
         [HttpGet]
-        [Authorize(Roles = UserRoles.Manager)]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
+        public IActionResult GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            var users = _userRepository.GetUsers();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(users);
         }
     }
 }
