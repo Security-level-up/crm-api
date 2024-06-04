@@ -6,5 +6,6 @@ namespace Api.Interfaces
     {
         ICollection<User> GetUsers();
         User AddOrGetUser(string email);
+        int GetUserId(string email);
     }
 }

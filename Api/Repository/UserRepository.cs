@@ -28,7 +28,11 @@ namespace Api.Repository
             userObj = _context.Users.First(user => user.Username == email);
             return userObj;
         }
-
+        public int GetUserId(string email)
+        {
+            var user = _context.Users.FirstOrDefault(user=> user.Username == email);
+            return user != null ? user.UserID : -1; 
+        }
         public ICollection<User> GetUsers()
         {
             return [.. _context.Users.Include(r => r.Role).OrderBy(user => user.Username)];
