@@ -14,11 +14,20 @@ namespace Api.Repository
             _context = context;
         }
 
-        public ICollection<SalesOpportunity> GetSalesOpportunities()
+          public ICollection<SalesOpportunity> GetSalesOpportunities()
         {
             return [.. _context.SalesOpportunities
                 .Include(u => u.User)
                 .Include(p => p.PipelineStage)
+                .OrderBy(opportunity => opportunity.Title)];
+        }
+
+          public ICollection<SalesOpportunity> GetSalesOpportunitiesByUserId(int userId)
+        {
+            return [.._context.SalesOpportunities
+                .Include(u => u.User)
+                .Include(p => p.PipelineStage)
+                .Where(opportunity => opportunity.AssignedTo == userId)
                 .OrderBy(opportunity => opportunity.Title)];
         }
     }
