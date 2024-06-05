@@ -40,16 +40,6 @@ builder.Services.AddScoped<ISalesOpportunitiesRepository, SalesOpportunitiesRepo
 
 builder.Services.AddControllers();
 
-builder.Services.AddCors(item =>
-{
-    item.AddPolicy("CORSPolicy", builder =>
-    {
-        builder.WithOrigins(allowedDomains)
-        .AllowAnyMethod()
-        .AllowAnyHeader();
-    });
-});
-
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
@@ -109,7 +99,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("CORSPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
