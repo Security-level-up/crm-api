@@ -8,7 +8,7 @@
     "function-handler" : "Api",
     "function-memory-size" : 256,
     "function-role"        : "arn:aws:iam::680901290385:role/lambda_exec_CRMApi",
-    "function-timeout"     : 10,
+    "function-timeout"     : 120,
     "function-runtime"     : "dotnet8",
     "function-architecture" : "x86_64",
     "function-subnets"      : "",
