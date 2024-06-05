@@ -36,6 +36,16 @@ namespace Api.Repository
             return _context.SalesOpportunities.FirstOrDefault(opportunity => opportunity.OpportunityID == opportunityId);
         }
 
+          public void CreateSalesOpportunity(SalesOpportunity salesOpportunity)
+        {
+            _context.SalesOpportunities.Add(salesOpportunity);
+        }
+
+        public void DeleteSalesOpportunity(SalesOpportunity salesOpportunity)
+        {
+            _context.SalesOpportunities.Remove(salesOpportunity);
+        }
+
         public void SaveChanges()
         {
             _context.SaveChanges();

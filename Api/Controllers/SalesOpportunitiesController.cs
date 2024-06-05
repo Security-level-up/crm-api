@@ -153,6 +153,33 @@ namespace Controllers
 
             return Ok(salesOpportunity);
         }
-    
+        [HttpPost]
+        public IActionResult CreateSalesOpportunity([FromBody] SalesOpportunity salesOpportunity)
+        {
+            if (salesOpportunity == null)
+            {
+                return BadRequest("Sales opportunity object is null.");
+            }
+
+            _salesOpportunitiesRepository.CreateSalesOpportunity(salesOpportunity);
+            _salesOpportunitiesRepository.SaveChanges();
+
+            return CreatedAtAction(nameof(GetSalesOpportunities), new { id = salesOpportunity.OpportunityID }, salesOpportunity);
+        }
+
+        [HttpDelete("{opportunityId}")]
+        public IActionResult DeleteSalesOpportunity(int opportunityId)
+        {
+            var salesOpportunity = _salesOpportunitiesRepository.GetSalesOpportunityById(opportunityId);
+            if (salesOpportunity == null)
+            {
+                return NotFound($"Sales opportunity with ID {opportunityId} not found.");
+            }
+
+            _salesOpportunitiesRepository.DeleteSalesOpportunity(salesOpportunity);
+            _salesOpportunitiesRepository.SaveChanges();
+
+            return NoContent();
+        }
     }
 }
