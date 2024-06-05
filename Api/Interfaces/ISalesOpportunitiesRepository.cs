@@ -6,5 +6,7 @@ namespace Api.Interfaces
     {
         ICollection<SalesOpportunity> GetSalesOpportunities();
         ICollection<SalesOpportunity> GetSalesOpportunitiesByUserId(int userId);
+        SalesOpportunity? GetSalesOpportunityById(int opportunityId); 
+        void SaveChanges(); 
     }
 }

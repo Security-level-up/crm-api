@@ -1,4 +1,4 @@
-
+using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -63,5 +63,96 @@ namespace Controllers
 
             return Ok(salesOpportunities);
         }
+
+       [HttpPatch("{opportunityId}")]
+        public IActionResult UpdateSalesOpportunity(int opportunityId, [FromBody] Dictionary<string, object> fieldsToUpdate)
+        {
+            var salesOpportunity = _salesOpportunitiesRepository.GetSalesOpportunityById(opportunityId);
+            if (salesOpportunity == null)
+            {
+                return NotFound($"Sales opportunity with ID {opportunityId} not found.");
+            }
+
+            foreach (var field in fieldsToUpdate)
+            {
+                switch (field.Key.ToLower())
+                {
+                    case "title":
+                        salesOpportunity.Title = field.Value.ToString();
+                        break;
+                    case "probofcompletion":
+                        if (float.TryParse(field.Value.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out float probOfCompletion))
+                        {
+                            salesOpportunity.ProbOfCompletion = probOfCompletion;
+                        }
+                        else
+                        {
+                            return BadRequest($"Invalid value for ProbOfCompletion: {field.Value}");
+                        }
+                        break;
+                    case "amount":
+                        if (float.TryParse(field.Value.ToString(), NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out float amount))
+                        {
+                            salesOpportunity.Amount = amount;
+                        }
+                        else
+                        {
+                            return BadRequest($"Invalid value for Amount: {field.Value}");
+                        }
+                        break;
+                    case "datecreated":
+                        if (DateTime.TryParse(field.Value.ToString(), out DateTime dateCreated))
+                        {
+                            salesOpportunity.DateCreated = DateTime.SpecifyKind(dateCreated, DateTimeKind.Utc);
+                        }
+                        else
+                        {
+                            return BadRequest($"Invalid value for DateCreated: {field.Value}");
+                        }
+                        break;
+                    case "dateclosed":
+                        if (DateTime.TryParse(field.Value.ToString(), out DateTime dateClosed))
+                        {
+                            salesOpportunity.DateClosed = DateTime.SpecifyKind(dateClosed, DateTimeKind.Utc);
+                        }
+                        else
+                        {
+                            return BadRequest($"Invalid value for DateClosed: {field.Value}");
+                        }
+                        break;
+
+                    case "stage":
+                        if (int.TryParse(field.Value.ToString(), out int stage))
+                        {
+                            salesOpportunity.Stage = stage;
+                        }
+                        else
+                        {
+                            return BadRequest($"Invalid value for Stage: {field.Value}");
+                        }
+                        break;
+                    case "assignedto":
+                        if (int.TryParse(field.Value.ToString(), out int assignedTo))
+                        {
+                            salesOpportunity.AssignedTo = assignedTo;
+                        }
+                        else
+                        {
+                            return BadRequest($"Invalid value for AssignedTo: {field.Value}");
+                        }
+                        break;
+                    case "notes":
+                        salesOpportunity.Notes = field.Value.ToString();
+                        break;
+                    default:
+                        return BadRequest($"Invalid field: {field.Key}");
+                }
+            }
+
+            _salesOpportunitiesRepository.SaveChanges();
+
+            return Ok(salesOpportunity);
+        }
+    
     }
 }

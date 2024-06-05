@@ -10,6 +10,7 @@ namespace Models
         [SwaggerSchema(ReadOnly = true)]
         [Key]
         public int RoleID { get; set; }
+        [Required(ErrorMessage = "RoleName is required")]
         public required string RoleName { get; set; }
     }
 }
