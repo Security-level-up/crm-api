@@ -18,7 +18,8 @@ namespace Api.Repository
         {
             return [.. _context.SalesOpportunities
                 .Include(u => u.User)
-                .Include(p => p.PipelineStage)];
+                .Include(p => p.PipelineStage)
+                .OrderBy(opportunity => opportunity.Title)];
         }
 
         public ICollection<SalesOpportunity> GetSalesOpportunitiesByUserId(int userId)
@@ -26,7 +27,8 @@ namespace Api.Repository
             return [.._context.SalesOpportunities
                 .Include(u => u.User)
                 .Include(p => p.PipelineStage)
-                .Where(opportunity => opportunity.AssignedTo == userId)];
+                .Where(opportunity => opportunity.AssignedTo == userId)
+                .OrderBy(opportunity => opportunity.Title)];
         }
 
         public SalesOpportunity? GetSalesOpportunityById(int opportunityId)
