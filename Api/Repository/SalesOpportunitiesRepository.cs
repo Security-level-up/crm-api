@@ -14,7 +14,7 @@ namespace Api.Repository
             _context = context;
         }
 
-          public ICollection<SalesOpportunity> GetSalesOpportunities()
+        public ICollection<SalesOpportunity> GetSalesOpportunities()
         {
             return [.. _context.SalesOpportunities
                 .Include(u => u.User)
@@ -22,13 +22,23 @@ namespace Api.Repository
                 .OrderBy(opportunity => opportunity.Title)];
         }
 
-          public ICollection<SalesOpportunity> GetSalesOpportunitiesByUserId(int userId)
+        public ICollection<SalesOpportunity> GetSalesOpportunitiesByUserId(int userId)
         {
             return [.._context.SalesOpportunities
                 .Include(u => u.User)
                 .Include(p => p.PipelineStage)
                 .Where(opportunity => opportunity.AssignedTo == userId)
                 .OrderBy(opportunity => opportunity.Title)];
+        }
+
+        public SalesOpportunity? GetSalesOpportunityById(int opportunityId)
+        {
+            return _context.SalesOpportunities.FirstOrDefault(opportunity => opportunity.OpportunityID == opportunityId);
+        }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
         }
     }
 }

@@ -10,12 +10,25 @@ namespace Models
         [SwaggerSchema(ReadOnly = true)]
         [Key]
         public int OpportunityID { get; set; }
-        public required string Title { get; set; }
+
+        [Required(ErrorMessage = "Title is required")]
+        public string Title { get; set; }
+
+        [Range(0, 100, ErrorMessage = "Probability of completion must be between 0 and 100")]
         public float ProbOfCompletion { get; set; }
+
+        [Range(0, double.MaxValue, ErrorMessage = "Amount must be a positive number")]
         public float Amount { get; set; }
+
+        [Required(ErrorMessage = "Date created is required")]
         public DateTime DateCreated { get; set; }
+
         public DateTime? DateClosed { get; set; }
+
+        [Required(ErrorMessage = "Stage is required")]
         public int Stage { get; set; }
+
+        [Required(ErrorMessage = "Assigned to is required")]
         public int AssignedTo { get; set; }
 
         [ForeignKey("AssignedTo")]
@@ -23,6 +36,8 @@ namespace Models
 
         [ForeignKey("Stage")]
         public PipelineStage PipelineStage { get; set; } = null!;
-        public required string Notes { get; set; }
+
+        [Required(ErrorMessage = "Notes are required")]
+        public string Notes { get; set; }
     }
 }
