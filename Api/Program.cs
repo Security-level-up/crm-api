@@ -5,9 +5,9 @@ using Microsoft.OpenApi.Models;
 using Data;
 using Api.Interfaces;
 using Api.Repository;
-
+using Models;
  
-
+ 
 var builder = WebApplication.CreateBuilder(args);
  
 string[] allowedDomains = builder.Configuration["AppSettings:AllowedOrigions"].Split(",");
@@ -39,8 +39,6 @@ builder.Services.AddScoped<IRolesRepository, RolesRepository>();
 builder.Services.AddScoped<ISalesOpportunitiesRepository, SalesOpportunitiesRepository>();
  
 builder.Services.AddControllers();
- 
-
  
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -93,12 +91,11 @@ builder.Services.AddSwaggerGen(option =>
 });
  
 var app = builder.Build();
-
- app.UseCors(builder => builder
+app.UseCors(builder => builder
      .AllowAnyOrigin()
      .AllowAnyMethod()
      .AllowAnyHeader());
-
+ 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
