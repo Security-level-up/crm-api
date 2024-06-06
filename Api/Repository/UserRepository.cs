@@ -30,8 +30,8 @@ namespace Api.Repository
         }
         public int GetUserId(string email)
         {
-            var user = _context.Users.FirstOrDefault(user=> user.Username == email);
-            return user != null ? user.UserID : -1; 
+            var user = _context.Users.FirstOrDefault(user => user.Username == email);
+            return user != null ? user.UserID : -1;
         }
         public ICollection<User> GetUsers()
         {

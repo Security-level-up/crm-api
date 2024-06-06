@@ -9,9 +9,7 @@ namespace Models
     {
         [SwaggerSchema(ReadOnly = true)]
         public int UserID { get; set; }
-        [Required(ErrorMessage = "Username is required")]
-        public required string Username { get; set; }        
-        [Required(ErrorMessage = "RoleID is required")]
+        public required string Username { get; set; }
         public required int RoleID { get; set; }
         public Role Role { get; set; } = null!;
     }

@@ -10,7 +10,6 @@ namespace Models
         [SwaggerSchema(ReadOnly = true)]
         [Key]
         public int StageID { get; set; }
-        [Required(ErrorMessage = "StageName is required")]
         public required string StageName { get; set; }
     }
 }
