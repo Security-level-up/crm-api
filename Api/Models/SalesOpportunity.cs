@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Models
@@ -32,10 +33,10 @@ namespace Models
         public int AssignedTo { get; set; }
 
         [ForeignKey("AssignedTo")]
-        public User User { get; set; } = null!;
+        public User? User { get; set; } = null!;
 
         [ForeignKey("Stage")]
-        public PipelineStage PipelineStage { get; set; } = null!;
+        public PipelineStage? PipelineStage { get; set; } = null!;
 
         [Required(ErrorMessage = "Notes are required")]
         public string Notes { get; set; }

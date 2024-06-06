@@ -3,12 +3,14 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Api.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SalesOpportunitiesController : ControllerBase
     {
         private readonly ISalesOpportunitiesRepository _salesOpportunitiesRepository;
@@ -27,6 +29,7 @@ namespace Controllers
         }
 
         [HttpGet("byUser/{userId}")]
+        [Authorize(Roles = UserRoles.SalesRep)]
         public ActionResult<IEnumerable<SalesOpportunity>> GetSalesOpportunitiesByUser(int userId)
         {
             var salesOpportunities = _salesOpportunitiesRepository.GetSalesOpportunitiesByUserId(userId);
@@ -40,6 +43,7 @@ namespace Controllers
         }
 
         [HttpGet("byCurrentUser")]
+        [Authorize(Roles = UserRoles.SalesRep)]
         public ActionResult<IEnumerable<SalesOpportunity>> GetSalesOpportunitiesByCurrentUser()
         {
             var claimsIdentity = User.Identity as ClaimsIdentity;
@@ -64,7 +68,7 @@ namespace Controllers
             return Ok(salesOpportunities);
         }
 
-       [HttpPatch("{opportunityId}")]
+        [HttpPatch("{opportunityId}")]
         public IActionResult UpdateSalesOpportunity(int opportunityId, [FromBody] Dictionary<string, object> fieldsToUpdate)
         {
             var salesOpportunity = _salesOpportunitiesRepository.GetSalesOpportunityById(opportunityId);
@@ -153,13 +157,41 @@ namespace Controllers
 
             return Ok(salesOpportunity);
         }
+
         [HttpPost]
-        public IActionResult CreateSalesOpportunity([FromBody] SalesOpportunity salesOpportunity)
+        [Authorize(Roles = UserRoles.Manager)]
+        public IActionResult CreateSalesOpportunity(SalesOpportunity salesOpportunity)
         {
-            if (salesOpportunity == null)
+            if (salesOpportunity.Stage is <= 1 or >= 6)
             {
-                return BadRequest("Sales opportunity object is null.");
+                return BadRequest("Invalid stage id entered. Values must range from 1 to 6 inclusive");
             }
+
+            _salesOpportunitiesRepository.CreateSalesOpportunity(salesOpportunity);
+            _salesOpportunitiesRepository.SaveChanges();
+
+            return CreatedAtAction(nameof(GetSalesOpportunities), new { id = salesOpportunity.OpportunityID }, salesOpportunity);
+        }
+
+        [HttpPost("personalSalesOpportunity")]
+        [Authorize(Roles = UserRoles.SalesRep)]
+        public IActionResult CreatePersonalSalesOpportunity(SalesOpportunity salesOpportunity)
+        {
+            if (salesOpportunity.Stage is <= 1 or >= 6)
+            {
+                return BadRequest("Invalid stage id entered. Values must range from 1 to 6 inclusive");
+            }
+
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+            Claim? email = claimsIdentity?.FindFirst(ClaimTypes.Email);
+
+            if (email == null)
+            {
+                return BadRequest("Unable to access email of user");
+            }
+
+            int userId = _userRepository.GetUserId(email.Value);
+            salesOpportunity.AssignedTo = userId;
 
             _salesOpportunitiesRepository.CreateSalesOpportunity(salesOpportunity);
             _salesOpportunitiesRepository.SaveChanges();
