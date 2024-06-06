@@ -69,6 +69,8 @@ namespace Controllers
         }
 
         [HttpPatch("{opportunityId}")]
+        [Authorize(Roles = UserRoles.SalesRep)]
+        [Authorize(Roles = UserRoles.Manager)]
         public IActionResult UpdateSalesOpportunity(int opportunityId, [FromBody] Dictionary<string, object> fieldsToUpdate)
         {
             var salesOpportunity = _salesOpportunitiesRepository.GetSalesOpportunityById(opportunityId);
@@ -162,7 +164,7 @@ namespace Controllers
         [Authorize(Roles = UserRoles.Manager)]
         public IActionResult CreateSalesOpportunity(SalesOpportunity salesOpportunity)
         {
-            if (salesOpportunity.Stage is <= 1 or >= 6)
+            if (salesOpportunity.Stage is < 1 or > 6)
             {
                 return BadRequest("Invalid stage id entered. Values must range from 1 to 6 inclusive");
             }
@@ -177,7 +179,7 @@ namespace Controllers
         [Authorize(Roles = UserRoles.SalesRep)]
         public IActionResult CreatePersonalSalesOpportunity(SalesOpportunity salesOpportunity)
         {
-            if (salesOpportunity.Stage is <= 1 or >= 6)
+            if (salesOpportunity.Stage is < 1 or > 6)
             {
                 return BadRequest("Invalid stage id entered. Values must range from 1 to 6 inclusive");
             }
