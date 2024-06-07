@@ -201,6 +201,7 @@ namespace Controllers
             return CreatedAtAction(nameof(GetSalesOpportunities), new { id = salesOpportunity.OpportunityID }, salesOpportunity);
         }
 
+        [Authorize(Roles = UserRoles.Manager)]
         [HttpDelete("{opportunityId}")]
         public IActionResult DeleteSalesOpportunity(int opportunityId)
         {
