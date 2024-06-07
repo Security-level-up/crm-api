@@ -69,8 +69,7 @@ namespace Controllers
         }
 
         [HttpPatch("{opportunityId}")]
-        [Authorize(Roles = UserRoles.SalesRep)]
-        [Authorize(Roles = UserRoles.Manager)]
+        [Authorize(Roles = UserRoles.SalesRepOrManager)]
         public IActionResult UpdateSalesOpportunity(int opportunityId, [FromBody] Dictionary<string, object> fieldsToUpdate)
         {
             var salesOpportunity = _salesOpportunitiesRepository.GetSalesOpportunityById(opportunityId);
@@ -201,6 +200,7 @@ namespace Controllers
             return CreatedAtAction(nameof(GetSalesOpportunities), new { id = salesOpportunity.OpportunityID }, salesOpportunity);
         }
 
+        [Authorize(Roles = UserRoles.Manager)]
         [HttpDelete("{opportunityId}")]
         public IActionResult DeleteSalesOpportunity(int opportunityId)
         {
