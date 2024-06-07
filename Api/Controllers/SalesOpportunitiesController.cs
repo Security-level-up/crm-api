@@ -69,8 +69,7 @@ namespace Controllers
         }
 
         [HttpPatch("{opportunityId}")]
-        [Authorize(Roles = UserRoles.SalesRep)]
-        [Authorize(Roles = UserRoles.Manager)]
+        [Authorize(Roles = UserRoles.SalesRepOrManager)]
         public IActionResult UpdateSalesOpportunity(int opportunityId, [FromBody] Dictionary<string, object> fieldsToUpdate)
         {
             var salesOpportunity = _salesOpportunitiesRepository.GetSalesOpportunityById(opportunityId);
